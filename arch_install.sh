@@ -34,7 +34,7 @@ mount "$DISK"1 /mnt/boot
 
 dhcpcd
 
-pacstrap -i /mnt base base-devel
+pacstrap -i /mnt base base-devel --noconfirm
 
 # Generated fstab subject for review
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -53,8 +53,8 @@ arch-chroot /mnt /bin/bash -c "
 
     mkinitcpio -p linux
 
-    echo $ROOT_PASSWORD | passwd --stdin
+    echo "root:$ROOT_PASSWORD" | chpasswd
 
     adduser "$USER"
-    echo $USER_PASSWORD | passwd $USER --stdin
+    echo "$USER:$USER_PASSWORD" | chpasswd
 "
