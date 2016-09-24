@@ -19,15 +19,12 @@ ROOT_PARTITION="$DISK3"
 for i in `seq 1 8`; do pvremove -ff /dev/sda$i; done
 for i in `seq 1 8`; do parted /dev/sda rm $i; done
 
-for i in `seq 1 8`; do pvremove -ff /dev/sdb$i; done
-for i in `seq 1 8`; do parted /dev/sdb rm $i; done
+parted --script $DISK mklabel gpt \
+    mkpart primary 1MiB 100MiB \
+    mkpart primary 100MiB 2100MiB \
+    mkpart primary 2100MiB 100%
 
-parted --script /dev/sda mklabel msdos
-parted /dev/sda unit cyl mkpart primary 1 15
-parted /dev/sda unit cyl mkpart primary 15 1216
-parted /dev/sda unit cyl mkpart primary 1216 -- -0
-parted /dev/sda set 1 boot on
-sfdisk --change-id /dev/sda 3 8e
+parted $DISK set 1 boot on
 
 # Initialize filesystems
 mkfs.ext4 $ROOT_PARTITION
