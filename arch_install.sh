@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 # Final hostname of target
 HOSTNAME="rfy"
 
@@ -11,13 +9,11 @@ USER="rfy"
 USER_PASSWORD="password"
 
 DISK="/dev/sda"
-BOOT_PARTITION="$DISK1"
-SWAP_PARTITION="$DISK2"
-ROOT_PARTITION="$DISK3"
-
 
 for i in `seq 1 8`; do pvremove -ff /dev/sda$i; done
 for i in `seq 1 8`; do parted /dev/sda rm $i; done
+
+set -e
 
 parted --script $DISK mklabel gpt \
     mkpart primary 1MiB 100MiB \
@@ -27,13 +23,14 @@ parted --script $DISK mklabel gpt \
 parted $DISK set 1 boot on
 
 # Initialize filesystems
-mkfs.ext4 $ROOT_PARTITION
-mkfs.ext4 $BOOT_PARTITION
-mkswap $SWAP_PARTITION
-swapon $SWAP_PARTITION
+mkfs.ext4 "$DISK"3
+mkfs.ext4 "$DISK"1
+mkswap "$DISK"2
+swapon "$DISK"2
 
-mount $ROOT_PARTITION /mnt
-mount $BOOT_PARTITION /mnt/boot
+mount "$DISK"3 /mnt
+mkdir /mnt/boot
+mount "$DISK"1 /mnt/boot
 pacstrap -i /mnt base base-devel
 
 # Generated fstab subject for review
