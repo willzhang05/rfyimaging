@@ -34,7 +34,7 @@ mount "$DISK"1 /mnt/boot
 
 dhcpcd
 
-pacstrap -i /mnt base base-devel --noconfirm
+pacstrap -i /mnt base base-devel grub --noconfirm
 
 # Generated fstab subject for review
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -57,6 +57,7 @@ arch-chroot /mnt /bin/bash -c "
 
     useradd "$USER" -d /home/rfy -m
     echo "$USER:$USER_PASSWORD" | chpasswd
-"
 
-reboot
+    grub-install --target=i386-pc $DISK
+    grub-mkconfig -o /boot/grub/grub.cfg
+"
