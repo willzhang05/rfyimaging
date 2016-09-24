@@ -23,14 +23,17 @@ parted --script $DISK mklabel gpt \
 parted $DISK set 1 boot on
 
 # Initialize filesystems
-mkfs.ext4 "$DISK"3
-mkfs.ext4 "$DISK"1
+yes | mkfs.ext4 "$DISK"3
+yes | mkfs.ext4 "$DISK"1
 mkswap "$DISK"2
 swapon "$DISK"2
 
 mount "$DISK"3 /mnt
 mkdir /mnt/boot
 mount "$DISK"1 /mnt/boot
+
+dhcpcd
+
 pacstrap -i /mnt base base-devel
 
 # Generated fstab subject for review
