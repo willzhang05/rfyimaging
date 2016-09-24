@@ -55,6 +55,8 @@ arch-chroot /mnt /bin/bash -c "
 
     echo "root:$ROOT_PASSWORD" | chpasswd
 
-    adduser "$USER"
+    useradd "$USER" -d /home/rfy -m
     echo "$USER:$USER_PASSWORD" | chpasswd
 "
+
+reboot
