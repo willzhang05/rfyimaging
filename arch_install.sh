@@ -34,7 +34,7 @@ mount "$DISK"1 /mnt/boot
 
 dhcpcd
 
-pacstrap -i /mnt base base-devel grub --noconfirm
+pacstrap -i /mnt base base-devel grub xorg-server gnome gnome-extra xf86-video-intel xf86-video-ati xf86-video-nouveau firefox chromium libreoffice --noconfirm
 
 # Generated fstab subject for review
 genfstab -U /mnt >> /mnt/etc/fstab
