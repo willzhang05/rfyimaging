@@ -60,4 +60,9 @@ arch-chroot /mnt /bin/bash -c "
 
     grub-install --target=i386-pc $DISK
     grub-mkconfig -o /boot/grub/grub.cfg
+    systemctl enable gdm
+    echo "Ready"
+    exit    
 "
+unmount -R /mnt
+reboot
