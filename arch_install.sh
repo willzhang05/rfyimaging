@@ -15,9 +15,8 @@ for i in `seq 1 8`; do parted /dev/sda rm $i; done
 
 set -e
 
-parted --script $DISK mklabel gpt \
-    mkpart primary bios_grub 0MiB 1MiB \
-    mkpart primary 1MiB 100MiB \
+parted --script $DISK mklabel msdos \
+    mkpart primary 2MiB 100MiB \
     mkpart primary 100MiB 2100MiB \
     mkpart primary 2100MiB 100%
 
@@ -33,7 +32,6 @@ mount "$DISK"3 /mnt
 mkdir /mnt/boot
 mount "$DISK"1 /mnt/boot
 
-dhcpcd -k
 dhcpcd
 
 pacstrap -i /mnt base base-devel grub xorg-server gnome gnome-extra xf86-video-intel xf86-video-ati xf86-video-nouveau firefox chromium libreoffice --noconfirm
