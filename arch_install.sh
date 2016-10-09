@@ -6,7 +6,7 @@ HOSTNAME="rfy"
 ROOT_PASSWORD="rfy"
 
 USER="rfy"
-USER_PASSWORD="password"
+USER_PASSWORD="rfy"
 
 DISK="/dev/sda"
 
@@ -34,7 +34,7 @@ mount "$DISK"1 /mnt/boot
 
 dhcpcd
 
-pacstrap -i /mnt base base-devel grub xorg-server gnome gnome-extra xf86-video-intel xf86-video-ati xf86-video-nouveau firefox chromium libreoffice --noconfirm
+pacstrap -i /mnt base base-devel grub xorg-server gnome gnome-extra gnome-keyring xf86-input-synaptics xf86-video-intel xf86-video-ati xf86-video-nouveau firefox chromium libreoffice network-manager-applet wpa_supplicant wireless_tools --noconfirm
 
 # Generated fstab subject for review
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -54,13 +54,16 @@ arch-chroot /mnt /bin/bash -c "
     mkinitcpio -p linux
 
     echo "root:$ROOT_PASSWORD" | chpasswd
-
-    useradd "$USER" -d /home/rfy -m
+    groupadd rfy
+    groupadd sudo
+    useradd "$USER" -d /home/rfy -m -g rfy -G sudo
     echo "$USER:$USER_PASSWORD" | chpasswd
 
     grub-install --target=i386-pc $DISK
     grub-mkconfig -o /boot/grub/grub.cfg
     systemctl enable gdm
+    systemctl enable NetworkManager
+    systemctl enable wpa_supplicant
     echo "Ready"
     exit    
 "
