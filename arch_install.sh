@@ -5,7 +5,7 @@ HOSTNAME="rfy"
 
 ROOT_PASSWORD="rfy"
 
-USER="rfy"
+USER="user"
 USER_PASSWORD="rfy"
 
 DISK="/dev/sda"
@@ -67,5 +67,5 @@ arch-chroot /mnt /bin/bash -c "
     echo "Ready"
     exit    
 "
-unmount -R /mnt
+umount -R /mnt
 reboot
